@@ -25,4 +25,4 @@ EOF
 # install Docker tools (cli, buildx, compose)
 COPY --from=gloursdocker/docker / /
 WORKDIR /app
-CMD [ "fastapi","run","main.py" ]
+CMD [ "fastapi","run","app/main.py" ]

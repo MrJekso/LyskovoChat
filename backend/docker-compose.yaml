@@ -15,8 +15,12 @@ services:
     image: postgres
     restart: always
     shm_size: 128mb
+    secrets:
+      - db-pass
     environment:
-      POSTGRES_PASSWORD: chat
+      POSTGRES_PASSWORD_FILE: /run/secrets/db-pass
+      POSTGRES_USER: user
+      POSTGRES_DB: chat
 
   adminer:
     image: adminer
@@ -33,3 +37,7 @@ services:
         read_only: true
     ports:
       - 80:80
+
+secrets:
+  db-pass:
+    file: db/pass.txt

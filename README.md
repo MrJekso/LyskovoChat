@@ -1,5 +1,6 @@
 # LyskovoChat
 
-# For start app to need:
+# For start backend to need:
 1. install docker: https://docs.docker.com/engine/install/
-2. run command: docker compose up
+2. go to backend directory
+3. run command: docker compose up

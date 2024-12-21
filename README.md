@@ -1,6 +1,5 @@
 # LyskovoChat
 
-# For start app need:
-# 1. instal docker
-# 2. run command
-docker docker compose up
+# For start app to need:
+1. install docker: https://docs.docker.com/engine/install/
+2. run command: docker compose up

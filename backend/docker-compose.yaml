@@ -1,0 +1,51 @@
+services:
+  friends:
+    build:
+      context: friends
+      target: builder
+    container_name: friends
+    environment:
+      PORT: 8000
+    ports:
+      - "8000:8000"
+    restart: "on-failure"
+#    depends_on:
+#      - db
+
+  db:
+    image: postgres
+    restart: always
+    user: postgres
+    secrets:
+      - db-password
+    volumes:
+      - db-data:/val/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=chat
+      - POSTGRERS_PASSWORD_FILE=/run/sercrets/db-password
+    expose:
+      - 5432
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  proxy:
+    image: nginx
+    volumes:
+      - type: bind
+        source: ./proxy/nginx.conf
+        target: /etc/nginx/conf.d/default.conf
+        read_only: true
+    ports:
+      - 80:80
+        #    depends_on:
+        #      - friends
+
+volumes:
+  db-data:
+
+secrets:
+  db-password:
+    file: ./db/pass.txt

@@ -24,3 +24,5 @@ usermod -aG docker vscode
 EOF
 # install Docker tools (cli, buildx, compose)
 COPY --from=gloursdocker/docker / /
+WORKDIR /app
+CMD [ "fastapi","run","main.py" ]

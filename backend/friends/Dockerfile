@@ -9,6 +9,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install -r req.txt
 
 COPY ./app ./app
+CMD [ "fastapi","run","app/main.py" ]
 
 FROM builder as dev-envs
 
@@ -24,5 +25,3 @@ usermod -aG docker vscode
 EOF
 # install Docker tools (cli, buildx, compose)
 COPY --from=gloursdocker/docker / /
-WORKDIR /app
-CMD [ "fastapi","run","app/main.py" ]

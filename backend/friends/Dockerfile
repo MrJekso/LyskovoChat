@@ -11,7 +11,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 COPY ./app ./app
 CMD [ "fastapi","run","app/main.py" ]
 
-FROM builder as dev-envs
+git FROM builder as dev-envs
 
 RUN <<EOF
 apt-get update

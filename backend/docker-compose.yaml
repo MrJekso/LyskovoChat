@@ -1,9 +1,8 @@
-version: '3.9'
 services:
   friends:
     build:
       context: friends
-      target: builder
+      target: friends
     container_name: friends
     environment:
       PORT: 8000

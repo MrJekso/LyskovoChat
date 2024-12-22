@@ -9,7 +9,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install -r req.txt
 
 COPY ./app ./app
-CMD [ "fastapi","run","app/main.py" ]
+CMD [ "fastapi", "run", "app/main.py" ]
 
 git FROM builder as dev-envs
 

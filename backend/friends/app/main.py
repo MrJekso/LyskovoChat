@@ -9,7 +9,3 @@ def home():
 @app.get("/test")
 def test():
     return {"message": "test"}
-
-@app.get("/frineds")
-def test():
-    return {"message": "frineds"}

@@ -9,7 +9,17 @@ services:
     ports:
       - 8000
     restart: "on-failure"
- 
+  admin:
+    build:
+      context: admin
+      target: admin
+    container_name: admin
+    environment:
+      PORT: 8000
+    ports:
+      - 8000
+    restart: "on-failure"
+  
   db:
     image: postgres
     restart: always

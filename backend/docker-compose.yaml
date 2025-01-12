@@ -1,9 +1,6 @@
 services:
   friends:
-    build:
-      context: friends
-      target: friends
-    container_name: friends
+    image: friends:0.0.2
     environment:
       PORT: 8000
     ports:

@@ -59,6 +59,7 @@ class Item(BaseModel):
 
 @app.post('/registration')
 async def registration(item: Item):
-    url = "http://" + ip + ":" + port + "/message"
-    r = requests.post(url,json=item)
-    return {"response": r.text}
+    url = "http://" + ip + ":" + port + "/registration"
+    r = requests.post(url,json={"email": "mr.jekso@gmail.com","login": "string","password": "string","repeat_password": "string"})
+    r = r.json()["response"]
+    return {"response": r["email"]}

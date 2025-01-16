@@ -1,3 +1,4 @@
+from pydantic import BaseModel
 from fastapi import FastAPI
 import requests
 import json
@@ -11,7 +12,7 @@ ip,port = ip[1],port[1]
 app = FastAPI()
 #######################################
 @app.get("/")
-def healthcheck():
+def slesh():
     return {"status":"ok"}
 #######################################
 @app.get("/healthcheck")
@@ -48,4 +49,16 @@ def settings():
 def message():
     url = "http://" + ip + ":" + port + "/message"
     r = requests.get(url)
+    return {"response": r.text}
+
+class Item(BaseModel):
+    email: str
+    login: str
+    password: str
+    repeat_password: str
+
+@app.post('/registration')
+async def registration(item: Item):
+    url = "http://" + ip + ":" + port + "/message"
+    r = requests.post(url,json=item)
     return {"response": r.text}

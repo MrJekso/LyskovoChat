@@ -32,4 +32,4 @@ class Item(BaseModel):
 
 @app.post('/registration')
 async def registration(item: Item):
-    return {"response": Item.email}
+    return {"response": "Item.email"}

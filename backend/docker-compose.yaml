@@ -1,6 +1,6 @@
 services:
   friends:
-    image: friends:0.0.3
+    image: friends:0.0.4
     environment:
       PORT: 8000
     ports:

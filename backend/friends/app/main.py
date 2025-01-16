@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -23,3 +24,12 @@ def settings():
 def message():
     return {"status":"ok","page":"message"}
 
+class Item(BaseModel):
+    email: str
+    login: str
+    password: str
+    repeat_password: str
+
+@app.post('/registration')
+async def registration(item: Item):
+    return {"response": Item.email}

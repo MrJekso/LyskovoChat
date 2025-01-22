@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Union
 
-
 def check_jwt(jwt):
     pass
 def create_jwt():
@@ -19,14 +18,8 @@ def healthcheck():
     return {"status": "ok"}
 
 '''
-Список друзей
+Авторизация
 '''
-@app.post('/friends')
-async def list_friends(item: JWT):
-    return {"response": item}
-'''
-Найти друга
-'''
-@app.post('/friends/find_friend')
-async def find_friend(item: JWT):
+@app.post('/authorization')
+async def authorization(item: JWT):
     return {"response": item}

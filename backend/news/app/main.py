@@ -12,7 +12,9 @@ app = FastAPI()
 class JWT(BaseModel):
     device: str
     jwt: str
-
+"""
+drop comment
+"""
 @app.get("/healthcheck")
 def healthcheck():
     return {"status": "ok"}

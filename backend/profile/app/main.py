@@ -13,6 +13,10 @@ class JWT(BaseModel):
     device: str
     jwt: str
 
+'''
+new func
+'''
+
 @app.get("/healthcheck")
 def healthcheck():
     return {"status": "ok"}

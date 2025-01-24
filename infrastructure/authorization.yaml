@@ -18,5 +18,3 @@ spec:
       containers:
         - name: authorization
           image: sonicsmall/authorization:latest
-          ports:
-            - containerPort:  8000

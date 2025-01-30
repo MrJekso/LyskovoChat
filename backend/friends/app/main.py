@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Union
 
-
 def check_jwt(jwt):
     pass
 def create_jwt():

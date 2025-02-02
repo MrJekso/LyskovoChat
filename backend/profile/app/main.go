@@ -5,14 +5,7 @@ import (
 	"net/http"
 )
 
-//healthcheck/
-//profile/
-//profile/open
-//profile/append
-//profile/chat
-//profile/delete
-//profile/like
-//profile/dislike
+
 
 // GET RESPONSE
 /*

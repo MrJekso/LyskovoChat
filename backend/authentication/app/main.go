@@ -14,6 +14,10 @@ const (
 	DBNAME   = "chat"
 )
 
+func health(w http.ResponseWriter, req *http.Request){
+	fmt.Fprintf(w,"{'response':'ok'}")
+}
+
 func authentication(w http.ResponseWriter, req *http.Request){
 	if req.Method == "POST" {
 		
@@ -67,6 +71,7 @@ func authentication(w http.ResponseWriter, req *http.Request){
 
 func main(){
 	http.HandleFunc("/authentication",authentication)	
+	http.HandleFunc("/health",health)	
 
 	http.ListenAndServe(":8090",nil)
 }

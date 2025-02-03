@@ -1,11 +1,11 @@
-FROM python:3
+FROM golang:1.23.5-alpine3.21 AS builder
+WORKDIR /build
+COPY ./app/. .
+RUN go mod download
+RUN CGO_ENABLED=0 GOOS=linux go build -o main .
 
-WORKDIR /usr/src/app
-
-COPY req.txt ./
-RUN pip install --no-cache-dir -r req.txt
-RUN pip install "fastapi[standard]"
-
-COPY ./app/main.py ./main.py
-EXPOSE 8000
-CMD [ "fastapi", "run", "/usr/src/app/main.py" ]
+FROM alpine:latest
+WORKDIR /app/
+COPY --from=builder /build/main .
+EXPOSE 8090
+CMD ["./main"]

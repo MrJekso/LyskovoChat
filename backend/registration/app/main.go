@@ -14,6 +14,10 @@ const (
 	DBNAME   = "chat"
 )
 
+func health(w http.ResponseWriter, req *http.Request){
+	fmt.Fprintf(w,"{'response':'ok'}")
+}
+
 func registration(w http.ResponseWriter, req *http.Request){
 	if req.Method == "POST" {
 		
@@ -45,7 +49,7 @@ func registration(w http.ResponseWriter, req *http.Request){
 
 			toDate    := time.Now()
 			dateStr := fmt.Sprintf("%d-%d-%d",toDate.Day(),toDate.Month(),toDate.Year())
-			reqData := fmt.Sprintf("insert into profiles (login,pass,firstname,lastname,date,email,jwt) values ('%s','%s','%s','%s','%s','%s','asd')",login,password,firstName,lastName,dateStr,email)
+			reqData := fmt.Sprintf("insert into profiles (login,pass,firstname,lastname,date,email,jwt) values ('%s','%s','%s','%s','%s','%s','')",login,password,firstName,lastName,dateStr,email)
 			fmt.Println(reqData)
  			result, err := db.Exec(reqData)
 			if err != nil {
@@ -60,7 +64,8 @@ func registration(w http.ResponseWriter, req *http.Request){
 }
 
 func main(){
-	http.HandleFunc("/registration",registration)	
+	http.HandleFunc("/registration",registration)
+	http.HandleFunc("/health",health)
 
 	http.ListenAndServe(":8090",nil)
 }

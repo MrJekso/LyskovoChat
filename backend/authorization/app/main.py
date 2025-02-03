@@ -16,7 +16,6 @@ class JWT(BaseModel):
 @app.get("/healthcheck")
 def healthcheck():
     return {"status": "ok"}
-
 '''
 Авторизация
 '''

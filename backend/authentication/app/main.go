@@ -18,18 +18,17 @@ const (
 
 var secretKey = []byte("my-secret-key")
 
-func createToken(username string) (string,error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims {
-		"username" : username,
-		"exp" : time.Now().Add(time.Hour * 24).Unix(),
+func createToken(username string) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"username": username,
+		"exp":      time.Now().Add(time.Hour * 24).Unix(),
 	})
 	tokenString, err := token.SignedString(secretKey)
 	if err != nil {
 		return "", err
 	}
-	return tokenString,err
+	return tokenString, err
 }
-
 
 func health(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "{'response':'ok'}")
@@ -48,43 +47,44 @@ func authentication(w http.ResponseWriter, req *http.Request) {
 			fmt.Fprintf(w, "{'response':'error','message':'not found password'}")
 		} else {
 			connStr := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", USER, PASSWORD, DBNAME)
-			fmt.Println(connStr)
 			db, err := sql.Open("postgres", connStr)
 			if err != nil {
 				panic(err)
 			}
 			defer db.Close()
 
-			reqSelect := fmt.Sprintf("select jwt from profiles where login='%s' and pass='%s'", login, pass)
-			fmt.Println(reqSelect)
+			reqSelect := fmt.Sprintf("select login from profiles where login='%s' and pass='%s'", login, pass)
 			rows, err := db.Query(reqSelect)
 			if err != nil {
 				panic(err)
 			}
 			defer rows.Close()
 
-			jwt := ""
+			var isLogin string
+
 			for rows.Next() {
-				err := rows.Scan(&jwt)
+				err := rows.Scan(&isLogin)
 				if err != nil {
 					panic(err)
 				}
-				fmt.Println(jwt)
 			}
-			jwt = strings.Replace(jwt, " ", "", -1)
-			//запрос в бд список чатов
-			if jwt == "default" {
-				//ЕСЛИ ЗНАЧЕНИЕ ПО УМОЛЧАНИЮ
-				//СГЕНЕРИРОВАТЬ НОВОЕ
+
+			isLogin = strings.Replace(isLogin, " ", "", -1)
+
+			if isLogin != "" {
+
 				key, err := createToken(login)
 				if err != nil {
 					panic(err)
 				}
+				sqlReq := fmt.Sprintf("update profiles set jwt = '%s' where login='%s' and pass='%s'", key, login, pass)
+				_, err = db.Exec(sqlReq)
+				if err != nil {
+					panic(err)
+				}
 				fmt.Fprintf(w, "{'response':'%s'}", key)
-			} else if jwt == "" {
-				fmt.Fprintf(w, "{'response':'Not found'}")
 			} else {
-				fmt.Fprintf(w, "{'response':'%s'}", jwt)
+				fmt.Fprintf(w, "{error: 'is not valid login or password'}")
 			}
 
 		}

@@ -23,7 +23,7 @@ func registration(w http.ResponseWriter, req *http.Request){
 		
 		email := fmt.Sprint(req.FormValue("email"))
 		login := fmt.Sprint(req.FormValue("login"))
-		password := fmt.Sprint(req.FormValue("password"))
+		pass := fmt.Sprint(req.FormValue("password"))
 		firstName := fmt.Sprint(req.FormValue("firstName"))
 		lastName := fmt.Sprint(req.FormValue("lastName"))
 		
@@ -31,7 +31,7 @@ func registration(w http.ResponseWriter, req *http.Request){
 			fmt.Fprintf(w,"{'response':'error','message':'not found email'}")
 		}else if login == "" {
 			fmt.Fprintf(w,"{'response':'error','message':'not found login'}")
-		}else if password == "" {
+		}else if pass == "" {
 			fmt.Fprintf(w,"{'response':'error','message':'not found password'}")
 		}else if firstName == "" {
 			fmt.Fprintf(w,"{'response':'error','message':'not found first name'}")
@@ -40,7 +40,7 @@ func registration(w http.ResponseWriter, req *http.Request){
 		}else{
 			
 			connStr := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable",USER,PASSWORD,DBNAME)
-			fmt.Println(connStr)
+			
 			db, err := sql.Open("postgres",connStr)
 			if err != nil {
 				panic(err)
@@ -49,15 +49,34 @@ func registration(w http.ResponseWriter, req *http.Request){
 
 			toDate    := time.Now()
 			dateStr := fmt.Sprintf("%d-%d-%d",toDate.Day(),toDate.Month(),toDate.Year())
-			reqData := fmt.Sprintf("insert into profiles (login,pass,firstname,lastname,date,email,jwt) values ('%s','%s','%s','%s','%s','%s','default')",login,password,firstName,lastName,dateStr,email)
-			fmt.Println(reqData)
- 			result, err := db.Exec(reqData)
+			reqData := fmt.Sprintf("insert into profiles (login,pass,firstname,lastname,date,email,jwt) values ('%s','%s','%s','%s','%s','%s','default')",login,pass,firstName,lastName,dateStr,email)
+			_, err = db.Exec(reqData)
 			if err != nil {
 				panic(err)
 			}
-			fmt.Println(result.RowsAffected())
-			//запрос в бд список чатов
 			
+			reqSelect := fmt.Sprintf("select id from profiles where login='%s' and pass='%s'", login,pass)
+			rows, err := db.Query(reqSelect)
+			if err != nil {
+				panic(err)
+			}
+			defer rows.Close()
+
+			var idUser int
+			
+			for rows.Next() {
+				err := rows.Scan(&idUser)
+				if err != nil {
+					panic(err)
+				}
+			}
+
+			reqData = fmt.Sprintf("insert into profile (key) values ('%d')",idUser)
+			_, err = db.Exec(reqData)
+			if err != nil {
+				panic(err)
+			}
+	
 			fmt.Fprintf(w,"{'response':'ok'}")
 		}
 	}
